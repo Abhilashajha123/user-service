@@ -1,6 +1,7 @@
 package com.example.user_service.entity;
 
 
+import com.example.user_service.constant.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,4 +21,9 @@ public class User {
 
     @Column(nullable = false, unique = true)
     private String email;
+
+    private String password;
+
+
+    private Role role;
 }

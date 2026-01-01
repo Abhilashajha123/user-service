@@ -1,6 +1,8 @@
 package com.example.user_service.controller;
 
 
+import com.example.user_service.dto.LoginRequest;
+import com.example.user_service.dto.LoginResponse;
 import com.example.user_service.dto.UserRequest;
 import com.example.user_service.dto.UserResponse;
 import com.example.user_service.service.UserService;
@@ -46,5 +48,10 @@ public class UserController {
         log.debug("getting user {}",id);
 
         return   ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
+    }
+
+    @PostMapping("/user/login")
+    public LoginResponse login(@RequestBody LoginRequest request) {
+        return userService.login(request);
     }
 }

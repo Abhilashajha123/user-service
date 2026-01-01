@@ -2,11 +2,15 @@ package com.example.user_service.serviceImpl;
 
 
 import com.example.user_service.Repository.UserRepo;
+import com.example.user_service.constant.Role;
+import com.example.user_service.dto.LoginRequest;
+import com.example.user_service.dto.LoginResponse;
 import com.example.user_service.dto.UserRequest;
 import com.example.user_service.dto.UserResponse;
 import com.example.user_service.entity.User;
 import com.example.user_service.exception.IdNotFoundException;
 import com.example.user_service.exception.UserCreationException;
+import com.example.user_service.security.JwtUtil;
 import com.example.user_service.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,9 +24,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final JwtUtil jwtUtil;
 
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, JwtUtil jwtUtil) {
         this.userRepo = userRepo;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -36,7 +42,9 @@ public class UserServiceImpl implements UserService {
             User user = new User();
             user.setName(userRequest.getName());
             user.setEmail(userRequest.getEmail());
+            user.setPassword(userRequest.getPassword());
 
+            user.setRole(Role.USER);
             // Save
             User savedUser = userRepo.save(user);
 
@@ -44,7 +52,8 @@ public class UserServiceImpl implements UserService {
             return new UserResponse(
                     savedUser.getId(),
                     savedUser.getName(),
-                    savedUser.getEmail()
+                    savedUser.getEmail(),
+                    savedUser.getRole()
             );
 
         } catch (Exception ex) {
@@ -57,8 +66,8 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> getAllUsers() {
         List<User> allUsers =  userRepo.findAll();
 
-        return allUsers.stream().map(user->new UserResponse(user.getId(),user.getName(),user.getEmail()))
-                .collect(Collectors.toList());
+        return allUsers.stream().map(user->new UserResponse(user.getId(),user.getName(),
+                        user.getEmail(), user.getRole())).collect(Collectors.toList());
 
     }
 
@@ -68,6 +77,21 @@ public class UserServiceImpl implements UserService {
         User user = userRepo.findById(id)
                 .orElseThrow(() -> new IdNotFoundException("User not found"));
 
-        return new UserResponse(user.getId(),user.getName(),user.getEmail());
+        return new UserResponse(user.getId(),user.getName(),user.getEmail(),user.getRole());
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+
+        User user = userRepo.findByEmail(request.getEmail());
+        if(user == null){
+            throw new UserCreationException("Invalid user");
+        }
+        if(!user.getPassword().equals(request.getPassword())){
+            throw new UserCreationException("Invalid password");
+        }
+        String token = jwtUtil.generateToken(request.getEmail(),user.getRole());
+        return new LoginResponse(token);
+
     }
 }

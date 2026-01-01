@@ -1,5 +1,6 @@
 package com.example.user_service.dto;
 
+import com.example.user_service.constant.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -15,4 +16,10 @@ public class UserRequest {
     @NotBlank(message = "Email cannot be null or empty")
     @Email(message = "Invalid email format")
     private String email;
+
+    @NotBlank(message = "Password cannot be null or empty")
+    private String password;
+
+
+    private Role role;
 }
