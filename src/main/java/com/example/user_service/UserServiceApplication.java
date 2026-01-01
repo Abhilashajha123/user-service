@@ -2,6 +2,7 @@ package com.example.user_service;
 
 import com.example.user_service.Repository.UserRepo;
 import com.example.user_service.constant.Role;
+import com.example.user_service.constant.UserStatus;
 import com.example.user_service.entity.User;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,6 +32,7 @@ public class UserServiceApplication implements CommandLineRunner {
             admin.setEmail(adminEmail);
             admin.setPassword("admin@123");
             admin.setRole(Role.ADMIN);
+            admin.setStatus(UserStatus.ACTIVE);
 
             userRepo.save(admin);
 

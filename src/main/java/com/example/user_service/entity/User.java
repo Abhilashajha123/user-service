@@ -2,6 +2,7 @@ package com.example.user_service.entity;
 
 
 import com.example.user_service.constant.Role;
+import com.example.user_service.constant.UserStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -26,4 +27,8 @@ public class User {
 
 
     private Role role;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 }

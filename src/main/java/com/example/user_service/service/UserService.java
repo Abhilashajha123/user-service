@@ -17,4 +17,5 @@ public interface UserService {
     public UserResponse getUserById(@PathVariable Long id);
 
     public LoginResponse login(LoginRequest loginRequest);
+    public UserResponse deactivate(@PathVariable Long id);
 }

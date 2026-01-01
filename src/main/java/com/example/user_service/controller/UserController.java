@@ -54,4 +54,9 @@ public class UserController {
     public LoginResponse login(@RequestBody LoginRequest request) {
         return userService.login(request);
     }
+
+    @PutMapping("/users/{id}/deactivate")
+    public void deactivateUser(@PathVariable Long id) {
+        userService.deactivate(id);
+    }
 }

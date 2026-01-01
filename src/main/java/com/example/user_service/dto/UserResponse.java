@@ -1,6 +1,7 @@
 package com.example.user_service.dto;
 
 import com.example.user_service.constant.Role;
+import com.example.user_service.constant.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,4 +13,7 @@ public class UserResponse {
     private String name;
     private String email;
     private Role role;
+
+
+    private UserStatus status;
 }
